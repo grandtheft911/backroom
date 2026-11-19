@@ -1,17 +1,3 @@
 {
-  "games": [
-    {
-      "id": "test-joc",
-      "tag": "test-joc-v0-1",
-      "apk": "https://github.com/grandtheft911/backroom/releases/download/test-joc-v0-1/Test-Joc-0.1.apk",
-      "size": 3000000,
-      "updated": "2026-11-19",
-      "icon": "icons/test-joc.png?v=mwo6hzfk",
-      "name": "Test Joc",
-      "version": "0.1",
-      "description": "Joc de test, se șterge imediat.",
-      "changelog": "Prima versiune",
-      "minAndroid": ""
-    }
-  ]
+  "games": []
 }
