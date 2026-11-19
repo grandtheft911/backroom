@@ -11,6 +11,7 @@ const ROOT = path.resolve(__dirname, "..");
 const DOCS = path.join(ROOT, "docs");
 const GAMES = path.join(DOCS, "games.json");
 const ICONS = path.join(DOCS, "icons");
+const SHOTS = path.join(DOCS, "shots");
 const CFG = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"));
 const REPO = `${CFG.owner}/${CFG.repo}`;
 const PORT = CFG.port || 4777;
@@ -113,6 +114,20 @@ async function publish(p) {
     g.icon = `icons/${g.id}.png?v=${Date.now().toString(36)}`;
   }
 
+  if (Array.isArray(p.shots)) {
+    await clearShots(g.id);
+    await fsp.mkdir(SHOTS, { recursive: true });
+    const v = Date.now().toString(36);
+    g.screenshots = [];
+    for (const [i, d] of p.shots.slice(0, 6).entries()) {
+      const m = /^data:image\/jpeg;base64,(.+)$/.exec(d);
+      if (!m) throw new Error("Captură de ecran invalidă.");
+      await fsp.writeFile(path.join(SHOTS, `${g.id}-${i + 1}.jpg`), Buffer.from(m[1], "base64"));
+      g.screenshots.push(`shots/${g.id}-${i + 1}.jpg?v=${v}`);
+    }
+    if (!g.screenshots.length) delete g.screenshots;
+  }
+
   g.name = name;
   g.version = version;
   g.description = String(p.description || "").trim();
@@ -125,6 +140,11 @@ async function publish(p) {
   return g;
 }
 
+async function clearShots(id) {
+  const files = await fsp.readdir(SHOTS).catch(() => []);
+  for (const f of files) if (f.startsWith(id + "-") && /^\d+\.jpg$/.test(f.slice(id.length + 1))) await fsp.unlink(path.join(SHOTS, f));
+}
+
 async function remove(id) {
   await token();
   await sync();
@@ -134,6 +154,7 @@ async function remove(id) {
   await deleteRelease(g.tag);
   data.games = data.games.filter((x) => x.id !== id);
   await fsp.unlink(path.join(ICONS, `${id}.png`)).catch(() => {});
+  await clearShots(id);
   await writeGames(data);
   await commit(`Șterge ${g.name}`);
 }
@@ -143,7 +164,7 @@ function json(res, code, obj) {
   res.end(JSON.stringify(obj));
 }
 
-function body(req, limit = 20 << 20) {
+function body(req, limit = 80 << 20) {
   return new Promise((resolve, reject) => {
     let n = 0; const chunks = [];
     req.on("data", (c) => { n += c.length; if (n > limit) { reject(new Error("Prea mare")); req.destroy(); } else chunks.push(c); });
@@ -173,10 +194,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       return fs.createReadStream(path.join(__dirname, "admin.html")).pipe(res);
     }
-    if (req.method === "GET" && url.pathname.startsWith("/icons/")) {
-      const f = path.join(ICONS, path.basename(url.pathname));
+    if (req.method === "GET" && /^\/(icons|shots)\//.test(url.pathname)) {
+      const dir = url.pathname.startsWith("/icons/") ? ICONS : SHOTS;
+      const f = path.join(dir, path.basename(url.pathname));
       if (!fs.existsSync(f)) { res.writeHead(404); return res.end(); }
-      res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "no-cache" });
+      res.writeHead(200, { "Content-Type": dir === ICONS ? "image/png" : "image/jpeg", "Cache-Control": "no-cache" });
       return fs.createReadStream(f).pipe(res);
     }
     if (req.method === "GET" && url.pathname === "/api/games") {
