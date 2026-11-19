@@ -44,7 +44,7 @@ const writeGames = (d) => fsp.writeFile(GAMES, JSON.stringify(d, null, 2) + "\n"
 const slug = (s) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "joc";
 const safeFile = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9._-]+/g, "-").replace(/^-|-$/g, "");
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => new Date().toLocaleDateString("sv-SE"); // local YYYY-MM-DD
 
 async function sync() {
   await git("pull", "--rebase", "--autostash", "origin", "main");
