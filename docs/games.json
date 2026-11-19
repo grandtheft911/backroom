@@ -1,21 +1,3 @@
 {
-  "games": [
-    {
-      "id": "shot-test",
-      "tag": "shot-test-v1-0",
-      "apk": "https://github.com/grandtheft911/backroom/releases/download/shot-test-v1-0/Shot-Test-1.0.apk",
-      "size": 3000000,
-      "updated": "2026-11-20",
-      "icon": "icons/shot-test.png?v=mwo6zzo7",
-      "screenshots": [
-        "shots/shot-test-1.jpg?v=mwo6zzo8",
-        "shots/shot-test-2.jpg?v=mwo6zzo8"
-      ],
-      "name": "Shot Test",
-      "version": "1.0",
-      "description": "Temporary test.",
-      "changelog": "",
-      "minAndroid": ""
-    }
-  ]
+  "games": []
 }
