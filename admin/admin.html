@@ -243,7 +243,11 @@ function uploadApk(file) {
     const x = new XMLHttpRequest();
     x.open("POST", "/api/apk");
     x.upload.onprogress = (e) => e.lengthComputable && bar("pct", (e.loaded / e.total) * 100);
-    x.onload = () => x.status === 200 ? resolve(JSON.parse(x.responseText).tmp) : reject(new Error("Copierea APK-ului a eșuat."));
+    x.onload = () => {
+      if (x.status === 200) return resolve(JSON.parse(x.responseText).tmp);
+      let why = ""; try { why = JSON.parse(x.responseText).error; } catch {}
+      reject(new Error("Copierea APK-ului a eșuat" + (why ? ": " + why : ` (cod ${x.status})`)));
+    };
     x.onerror = () => reject(new Error("Copierea APK-ului a eșuat."));
     x.send(file);
   });

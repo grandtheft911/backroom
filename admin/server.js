@@ -15,7 +15,7 @@ const SHOTS = path.join(DOCS, "shots");
 const CFG = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"));
 const REPO = `${CFG.owner}/${CFG.repo}`;
 const PORT = CFG.port || 4777;
-const TMP = path.join(os.tmpdir(), "backroom-admin");
+const TMP = path.join(__dirname, ".tmp");
 fs.mkdirSync(TMP, { recursive: true });
 
 let TOKEN = null;
@@ -93,6 +93,7 @@ async function publish(p) {
     if (!fs.existsSync(tmp)) throw new Error("Fișierul APK încărcat nu mai există. Alege-l din nou.");
     let tag = `${g.id}-v${slug(version)}`;
     if (tag === g.tag || (await releaseExists(tag))) tag += "-" + Date.now().toString(36);
+    await fsp.mkdir(TMP, { recursive: true });
     const file = path.join(TMP, `${safeFile(name)}-${safeFile(version)}.apk`);
     await fsp.rename(tmp, file);
     const st = await fsp.stat(file);
@@ -205,6 +206,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { ...(await readGames()), site: `https://${CFG.owner}.github.io/${CFG.repo}/` });
     }
     if (req.method === "POST" && url.pathname === "/api/apk") {
+      await fsp.mkdir(TMP, { recursive: true });
       const name = `up-${Date.now()}-${Math.random().toString(36).slice(2)}.apk`;
       const out = fs.createWriteStream(path.join(TMP, name));
       req.pipe(out);
