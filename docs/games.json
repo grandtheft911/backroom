@@ -1,3 +1,17 @@
 {
-  "games": []
+  "games": [
+    {
+      "id": "grand-theft-auto-vi-mobile",
+      "tag": "grand-theft-auto-vi-mobile-v2-4-6",
+      "apk": "https://github.com/grandtheft911/backroom/releases/download/grand-theft-auto-vi-mobile-v2-4-6/Grand-Theft-Auto-VI-Mobile-2.4.6.apk",
+      "size": 56458168,
+      "updated": "2026-11-21",
+      "icon": "icons/grand-theft-auto-vi-mobile.png?v=mwpjjtei",
+      "name": "Grand Theft Auto VI (Mobile)",
+      "version": "2.4.6",
+      "description": "GTA VI, Mobile, APK, FREE DOWNLOAD",
+      "changelog": "",
+      "minAndroid": "10"
+    }
+  ]
 }
