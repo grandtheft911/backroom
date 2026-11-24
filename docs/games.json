@@ -12,6 +12,19 @@
       "description": "GTA VI, Mobile, APK, FREE DOWNLOAD",
       "changelog": "",
       "minAndroid": "10"
+    },
+    {
+      "id": "grand-theft-auto-v-mobile",
+      "tag": "grand-theft-auto-v-mobile-v1-1-2",
+      "apk": "https://github.com/grandtheft911/backroom/releases/download/grand-theft-auto-v-mobile-v1-1-2/Grand-Theft-Auto-V-Mobile-1.1.2.apk",
+      "size": 57760868,
+      "updated": "2026-11-24",
+      "icon": "icons/grand-theft-auto-v-mobile.png?v=mwui5wld",
+      "name": "Grand Theft Auto V (Mobile)",
+      "version": "1.1.2",
+      "description": "Gta V, Installer 9.42GB, APK, Android",
+      "changelog": "",
+      "minAndroid": "8"
     }
   ]
 }
